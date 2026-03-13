@@ -354,6 +354,20 @@ template.forward.quote-headline = "-------- Forwarded Message --------\n"
 
 
 
+# Defines the Gmail backend as the default one for all features.
+#
+# Gmail uses the Gmail REST API instead of IMAP and works well with
+# CJK searches. Google OAuth 2.0 endpoints and the
+# "https://mail.google.com/" scope are filled automatically.
+#
+#backend.type = "gmail"
+#backend.client-id = "client-id"
+#backend.client-secret.keyring = "example-gmail-client-secret"
+#backend.access-token.keyring = "example-gmail-access-token"
+#backend.refresh-token.keyring = "example-gmail-refresh-token"
+#backend.method = "xoauth2"
+#backend.pkce = true
+
 # Defines the IMAP backend as the default one for all features.
 #
 backend.type = "imap"
@@ -525,6 +539,19 @@ backend.auth.cmd = "pass show example-imap"
 #backend.profile = "example"
 
 
+
+# Defines the Gmail backend for the message sending feature.
+#
+# Gmail stores sent messages on the server automatically, so no extra
+# sent-copy append is needed.
+#
+#message.send.backend.type = "gmail"
+#message.send.backend.client-id = "client-id"
+#message.send.backend.client-secret.keyring = "example-gmail-client-secret"
+#message.send.backend.access-token.keyring = "example-gmail-access-token"
+#message.send.backend.refresh-token.keyring = "example-gmail-refresh-token"
+#message.send.backend.method = "xoauth2"
+#message.send.backend.pkce = true
 
 # Defines the SMTP backend for the message sending feature.
 #

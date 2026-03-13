@@ -5,6 +5,8 @@ use std::{
 
 use clap::Parser;
 use color_eyre::{Result, Section};
+#[cfg(feature = "gmail")]
+use email::gmail::GmailContextBuilder;
 #[cfg(all(feature = "keyring", feature = "imap"))]
 use email::imap::config::ImapAuthConfig;
 #[cfg(feature = "imap")]
@@ -82,12 +84,24 @@ impl AccountDoctorCommand {
                     _ => (),
                 }
 
+                #[cfg(feature = "gmail")]
+                if let Some(Backend::Gmail(gmail_config)) = toml_account_config.backend.as_ref() {
+                    gmail_config.auth.reset().await?;
+                }
+
                 #[cfg(feature = "smtp")]
                 match toml_account_config.smtp_auth_config() {
                     Some(SmtpAuthConfig::Password(config)) => config.reset().await?,
                     #[cfg(feature = "oauth2")]
                     Some(SmtpAuthConfig::OAuth2(config)) => config.reset().await?,
                     _ => (),
+                }
+
+                #[cfg(feature = "gmail")]
+                if let Some(SendingBackend::Gmail(gmail_config)) =
+                    toml_account_config.message_send_backend()
+                {
+                    gmail_config.auth.reset().await?;
                 }
 
                 #[cfg(any(feature = "pgp-gpg", feature = "pgp-commands", feature = "pgp-native"))]
@@ -114,6 +128,14 @@ impl AccountDoctorCommand {
                 _ => (),
             };
 
+            #[cfg(feature = "gmail")]
+            if let Some(Backend::Gmail(gmail_config)) = toml_account_config.backend.as_ref() {
+                gmail_config
+                    .auth
+                    .configure(|| Ok(prompt::secret("Gmail OAuth 2.0 client secret")?))
+                    .await?;
+            }
+
             #[cfg(feature = "smtp")]
             match toml_account_config.smtp_auth_config() {
                 Some(SmtpAuthConfig::Password(config)) => {
@@ -130,6 +152,16 @@ impl AccountDoctorCommand {
                 _ => (),
             };
 
+            #[cfg(feature = "gmail")]
+            if let Some(SendingBackend::Gmail(gmail_config)) =
+                toml_account_config.message_send_backend()
+            {
+                gmail_config
+                    .auth
+                    .configure(|| Ok(prompt::secret("Gmail OAuth 2.0 client secret")?))
+                    .await?;
+            }
+
             #[cfg(any(feature = "pgp-gpg", feature = "pgp-commands", feature = "pgp-native"))]
             if let Some(config) = &toml_account_config.pgp {
                 config
@@ -141,6 +173,24 @@ impl AccountDoctorCommand {
         }
 
         match toml_account_config.backend {
+            #[cfg(feature = "gmail")]
+            Some(Backend::Gmail(gmail_config)) => {
+                print!("Checking Gmail integrity… ");
+                stdout.flush()?;
+
+                let ctx = GmailContextBuilder::new(account_config.clone(), Arc::new(gmail_config));
+                let res = BackendBuilder::new(account_config.clone(), ctx)
+                    .check_up()
+                    .await;
+
+                if self.fix {
+                    res?;
+                } else {
+                    res.note("Run with --fix to (re)configure your account.")?;
+                }
+
+                println!("OK");
+            }
             #[cfg(feature = "maildir")]
             Some(Backend::Maildir(mdir_config)) => {
                 print!("Checking Maildir integrity… ");
@@ -194,6 +244,24 @@ impl AccountDoctorCommand {
             .and_then(|send| send.backend);
 
         match sending_backend {
+            #[cfg(feature = "gmail")]
+            Some(SendingBackend::Gmail(gmail_config)) => {
+                print!("Checking Gmail integrity… ");
+                stdout.flush()?;
+
+                let ctx = GmailContextBuilder::new(account_config.clone(), Arc::new(gmail_config));
+                let res = BackendBuilder::new(account_config.clone(), ctx)
+                    .check_up()
+                    .await;
+
+                if self.fix {
+                    res?;
+                } else {
+                    res.note("Run with --fix to (re)configure your account.")?;
+                }
+
+                println!("OK");
+            }
             #[cfg(feature = "smtp")]
             Some(SendingBackend::Smtp(smtp_config)) => {
                 print!("Checking SMTP integrity… ");

@@ -12,11 +12,12 @@ documentation = "https://github.com/pimalaya/himalaya"
 repository = "https://github.com/pimalaya/himalaya"
 
 [package.metadata.docs.rs]
-features = ["imap", "maildir", "smtp", "sendmail", "oauth2", "wizard", "pgp-commands", "pgp-native"]
+features = ["gmail", "imap", "maildir", "smtp", "sendmail", "oauth2", "wizard", "pgp-commands", "pgp-native"]
 rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
-default = ["imap", "maildir", "smtp", "sendmail", "wizard", "pgp-commands"]
+default = ["gmail", "imap", "maildir", "smtp", "sendmail", "wizard", "pgp-commands"]
+gmail = ["email-lib/gmail", "pimalaya-tui/gmail"]
 imap = ["email-lib/imap", "pimalaya-tui/imap"]
 maildir = ["email-lib/maildir", "pimalaya-tui/maildir"]
 notmuch = ["email-lib/notmuch", "pimalaya-tui/notmuch"]
@@ -54,5 +55,11 @@ url = "2.2"
 uuid = { version = "1.19", features = ["v4"] }
 
 [patch.crates-io]
-pimalaya-tui.git = "https://github.com/pimalaya/tui"
+email-lib.path = "../core/email"
+mml-lib.path = "../core/mml"
+secret-lib.path = "../core/secret"
+shellexpand-utils.path = "../core/shellexpand-utils"
+process-lib.path = "../core/process"
+oauth-lib.path = "../core/oauth"
+pimalaya-tui.path = "../tui"
 imap-client.git = "https://github.com/pimalaya/io-imap"
