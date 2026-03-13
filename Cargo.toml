@@ -17,7 +17,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
 default = ["gmail", "imap", "maildir", "smtp", "sendmail", "wizard", "pgp-commands"]
-gmail = ["email-lib/gmail", "pimalaya-tui/gmail"]
+gmail = ["email-lib/gmail", "pimalaya-tui/gmail", "oauth2"]
 imap = ["email-lib/imap", "pimalaya-tui/imap"]
 maildir = ["email-lib/maildir", "pimalaya-tui/maildir"]
 notmuch = ["email-lib/notmuch", "pimalaya-tui/notmuch"]
