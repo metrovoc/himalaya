@@ -37,7 +37,7 @@ impl FlagAddCommand {
         info!("executing add flag(s) command");
 
         let folder = &self.folder.name;
-        let (ids, flags) = into_tuple(&self.args.ids_and_flags);
+        let (ids, flags) = into_tuple(&self.args);
         let (toml_account_config, account_config) = config
             .clone()
             .into_account_configs(self.account.name.as_deref(), |c: &Config, name| {

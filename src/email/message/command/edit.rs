@@ -79,7 +79,7 @@ impl MessageEditCommand {
 
         let id = self.envelope.id;
         let tpl = backend
-            .get_messages(folder, &[id])
+            .get_messages(folder, std::slice::from_ref(&id))
             .await?
             .first()
             .ok_or(eyre!("cannot find message"))?
@@ -95,7 +95,9 @@ impl MessageEditCommand {
         editor::edit_tpl_with_editor(account_config, printer, &backend, tpl).await?;
 
         if self.on_place {
-            backend.delete_messages(folder, &[id]).await?;
+            backend
+                .delete_messages(folder, std::slice::from_ref(&id))
+                .await?;
         }
 
         Ok(())

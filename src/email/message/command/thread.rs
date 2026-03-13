@@ -87,16 +87,14 @@ impl MessageThreadCommand {
         .await?;
 
         let envelopes = backend
-            .thread_envelope(folder, *id, Default::default())
+            .thread_envelope(folder, id, Default::default())
             .await?;
 
         let ids: Vec<_> = envelopes
             .graph()
             .nodes()
-            .filter_map(|e| {
-                let id = e.id.parse::<usize>().unwrap_or(0);
-                if id > 0 { Some(id) } else { None }
-            })
+            .filter(|e| e.id != "0")
+            .map(|e| e.id.to_owned())
             .collect();
 
         let emails = if self.preview {

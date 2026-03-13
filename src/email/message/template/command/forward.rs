@@ -69,7 +69,7 @@ impl TemplateForwardCommand {
 
         let id = self.envelope.id;
         let tpl = backend
-            .get_messages(folder, &[id])
+            .get_messages(folder, std::slice::from_ref(&id))
             .await?
             .first()
             .ok_or(eyre!("cannot find message {id}"))?

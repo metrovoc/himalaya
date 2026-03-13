@@ -63,7 +63,7 @@ impl MessageExportCommand {
         info!("executing export message command");
 
         let folder = &self.folder.name;
-        let id = &self.envelope.id;
+        let id = self.envelope.id;
 
         let (toml_account_config, account_config) = config
             .clone()
@@ -86,7 +86,9 @@ impl MessageExportCommand {
         .build()
         .await?;
 
-        let msgs = backend.get_messages(folder, &[*id]).await?;
+        let msgs = backend
+            .get_messages(folder, std::slice::from_ref(&id))
+            .await?;
         let msg = msgs.first().ok_or(eyre!("cannot find message {id}"))?;
 
         if self.full {

@@ -31,7 +31,7 @@ pub struct EnvelopeThreadCommand {
 
     /// Show only threads that contain the given envelope identifier.
     #[arg(long, short)]
-    pub id: Option<usize>,
+    pub id: Option<String>,
 
     /// The list envelopes filter and sort query.
     ///
@@ -99,7 +99,7 @@ impl EnvelopeThreadCommand {
         };
 
         let envelopes = match self.id {
-            Some(id) => backend.thread_envelope(folder, id, opts).await,
+            Some(id) => backend.thread_envelope(folder, &id, opts).await,
             None => backend.thread_envelopes(folder, opts).await,
         }?;
 
