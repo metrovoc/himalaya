@@ -20,7 +20,7 @@ use crate::imap::{
 /// This command removes the specified flag(s) from message(s)
 /// identified by the given sequence set.
 #[derive(Debug, Parser)]
-pub struct RemoveFlagsCommand {
+pub struct ImapFlagRemoveCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -38,7 +38,7 @@ pub struct RemoveFlagsCommand {
     pub seq: bool,
 }
 
-impl RemoveFlagsCommand {
+impl ImapFlagRemoveCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

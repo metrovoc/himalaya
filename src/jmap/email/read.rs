@@ -14,7 +14,7 @@ use crate::jmap::account::JmapAccount;
 ///
 /// Shows headers and plain text body by default.
 #[derive(Debug, Parser)]
-pub struct ReadEmailCommand {
+pub struct JmapEmailReadCommand {
     /// The email ID(s) to read.
     #[arg(value_name = "ID", required = true)]
     pub ids: Vec<String>,
@@ -24,7 +24,7 @@ pub struct ReadEmailCommand {
     pub html: bool,
 }
 
-impl ReadEmailCommand {
+impl JmapEmailReadCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 

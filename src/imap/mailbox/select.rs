@@ -15,12 +15,12 @@ use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
 ///
 /// https://github.com/pimalaya/sirup
 #[derive(Debug, Parser)]
-pub struct SelectMailboxCommand {
+pub struct ImapMailboxSelectCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
 }
 
-impl SelectMailboxCommand {
+impl ImapMailboxSelectCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

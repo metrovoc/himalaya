@@ -21,7 +21,7 @@ use crate::imap::{
 /// This command fetches a message and displays its text content.
 /// By default it shows plain text content; use --html to show HTML.
 #[derive(Debug, Parser)]
-pub struct ReadMessageCommand {
+pub struct ImapMessageReadCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -40,7 +40,7 @@ pub struct ReadMessageCommand {
     pub html: bool,
 }
 
-impl ReadMessageCommand {
+impl ImapMessageReadCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

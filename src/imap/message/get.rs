@@ -22,7 +22,7 @@ use crate::imap::{
 /// This command fetches a message and displays its headers along with
 /// the body structure tree showing all MIME parts.
 #[derive(Debug, Parser)]
-pub struct GetMessageCommand {
+pub struct ImapMessageGetCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -35,7 +35,7 @@ pub struct GetMessageCommand {
     pub seq: bool,
 }
 
-impl GetMessageCommand {
+impl ImapMessageGetCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

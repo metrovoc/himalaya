@@ -19,7 +19,7 @@ use crate::imap::account::ImapAccount;
 /// By default, only subscribed mailboxes are listed. Use --all to
 /// list all mailboxes.
 #[derive(Debug, Parser)]
-pub struct ListMailboxesCommand {
+pub struct ImapMailboxListCommand {
     /// List all mailboxes, not just subscribed ones.
     #[arg(short = 'A', long)]
     pub all: bool,
@@ -33,7 +33,7 @@ pub struct ListMailboxesCommand {
     pub pattern: String,
 }
 
-impl ListMailboxesCommand {
+impl ImapMailboxListCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let reference = self.reference.try_into()?;

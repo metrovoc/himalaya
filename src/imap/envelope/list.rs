@@ -30,7 +30,7 @@ use crate::imap::{
 /// mailbox. You can specify a sequence set to limit which messages
 /// are fetched.
 #[derive(Debug, Parser)]
-pub struct ListEnvelopesCommand {
+pub struct ImapEnvelopeListCommand {
     /// The sequence set of envelopes.
     #[arg(value_name = "SEQUENCE")]
     #[arg(conflicts_with = "page_size")]
@@ -53,7 +53,7 @@ pub struct ListEnvelopesCommand {
     pub sequence: bool,
 }
 
-impl ListEnvelopesCommand {
+impl ImapEnvelopeListCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

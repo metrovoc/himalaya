@@ -11,13 +11,13 @@ use crate::jmap::{account::JmapAccount, submission::query::SubmissionsTable};
 
 /// Get JMAP email submissions by ID (EmailSubmission/get).
 #[derive(Debug, Parser)]
-pub struct GetSubmissionCommand {
+pub struct JmapSubmissionGetCommand {
     /// Submission ID(s) to retrieve.
     #[arg(value_name = "ID", required = true)]
     pub ids: Vec<String>,
 }
 
-impl GetSubmissionCommand {
+impl JmapSubmissionGetCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 

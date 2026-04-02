@@ -18,14 +18,14 @@ use crate::imap::{
 /// All emails from the given mailbox are definitely deleted. The
 /// purged mailbox will remain empty after execution of the command.
 #[derive(Debug, Parser)]
-pub struct PurgeMailboxCommand {
+pub struct ImapMailboxPurgeCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
     #[command(flatten)]
     pub mailbox_no_select: MailboxNoSelectFlag,
 }
 
-impl PurgeMailboxCommand {
+impl ImapMailboxPurgeCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

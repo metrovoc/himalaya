@@ -11,12 +11,12 @@ use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
 /// This command allows you to create a new mailbox using the given
 /// name.
 #[derive(Debug, Parser)]
-pub struct CreateMailboxCommand {
+pub struct ImapMailboxCreateCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
 }
 
-impl CreateMailboxCommand {
+impl ImapMailboxCreateCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
 

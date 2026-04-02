@@ -11,12 +11,12 @@ use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
 /// This command unsubscribes from a mailbox, removing it from the
 /// list of subscribed mailboxes.
 #[derive(Debug, Parser)]
-pub struct UnsubscribeMailboxCommand {
+pub struct ImapMailboxUnsubscribeCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
 }
 
-impl UnsubscribeMailboxCommand {
+impl ImapMailboxUnsubscribeCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

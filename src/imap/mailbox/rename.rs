@@ -13,14 +13,14 @@ use crate::imap::{
 ///
 /// This command renames an existing mailbox to a new name.
 #[derive(Debug, Parser)]
-pub struct RenameMailboxCommand {
+pub struct ImapMailboxRenameCommand {
     #[command(flatten)]
     pub mailbox_source_name: MailboxNameArg,
     #[command(flatten)]
     pub mailbox_dest_name: TargetMailboxNameArg,
 }
 
-impl RenameMailboxCommand {
+impl ImapMailboxRenameCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let from = self.mailbox_source_name.inner.try_into()?;

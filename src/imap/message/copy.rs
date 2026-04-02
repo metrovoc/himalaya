@@ -17,7 +17,7 @@ use crate::imap::{
 /// This command copies message(s) identified by the given sequence
 /// set from the source mailbox to the destination mailbox.
 #[derive(Debug, Parser)]
-pub struct CopyMessageCommand {
+pub struct ImapMessageCopyCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -34,7 +34,7 @@ pub struct CopyMessageCommand {
     pub seq: bool,
 }
 
-impl CopyMessageCommand {
+impl ImapMessageCopyCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

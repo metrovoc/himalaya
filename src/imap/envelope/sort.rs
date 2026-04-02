@@ -33,7 +33,7 @@ use crate::imap::{
 ///   - subject   - sort by Subject header
 ///   - size      - sort by message size
 #[derive(Debug, Parser)]
-pub struct SortEnvelopesCommand {
+pub struct ImapEnvelopeSortCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalArg,
 
@@ -54,7 +54,7 @@ pub struct SortEnvelopesCommand {
     pub seq: bool,
 }
 
-impl SortEnvelopesCommand {
+impl ImapEnvelopeSortCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

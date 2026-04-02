@@ -29,7 +29,7 @@ use crate::imap::{
 ///   - references (default) - uses References and In-Reply-To headers
 ///   - orderedsubject       - groups by normalized subject
 #[derive(Debug, Parser)]
-pub struct ThreadEnvelopesCommand {
+pub struct ImapEnvelopeThreadCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -48,7 +48,7 @@ pub struct ThreadEnvelopesCommand {
     pub seq: bool,
 }
 
-impl ThreadEnvelopesCommand {
+impl ImapEnvelopeThreadCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

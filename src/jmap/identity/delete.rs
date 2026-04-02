@@ -10,13 +10,13 @@ use crate::jmap::account::JmapAccount;
 
 /// Delete a JMAP sender identity (Identity/set).
 #[derive(Debug, Parser)]
-pub struct DeleteIdentityCommand {
+pub struct JmapIdentityDeleteCommand {
     /// Identity ID(s) to delete.
     #[arg(value_name = "ID", required = true)]
     pub ids: Vec<String>,
 }
 
-impl DeleteIdentityCommand {
+impl JmapIdentityDeleteCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 

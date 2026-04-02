@@ -15,9 +15,9 @@ use crate::imap::account::ImapAccount;
 ///
 /// https://github.com/pimalaya/sirup
 #[derive(Debug, Parser)]
-pub struct UnselectMailboxCommand;
+pub struct ImapMailboxUnselectCommand;
 
-impl UnselectMailboxCommand {
+impl ImapMailboxUnselectCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mut arg = None;

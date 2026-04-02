@@ -18,13 +18,13 @@ use crate::jmap::account::JmapAccount;
 ///
 /// Each thread contains an ordered list of email IDs in the thread.
 #[derive(Debug, Parser)]
-pub struct GetThreadCommand {
+pub struct JmapThreadGetCommand {
     /// Thread ID(s) to retrieve.
     #[arg(value_name = "ID", required = true)]
     pub ids: Vec<String>,
 }
 
-impl GetThreadCommand {
+impl JmapThreadGetCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 

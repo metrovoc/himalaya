@@ -13,7 +13,7 @@ use crate::jmap::account::JmapAccount;
 
 /// Update a JMAP sender identity (Identity/set).
 #[derive(Debug, Parser)]
-pub struct UpdateIdentityCommand {
+pub struct JmapIdentityUpdateCommand {
     /// Identity ID to update.
     pub id: String,
 
@@ -30,7 +30,7 @@ pub struct UpdateIdentityCommand {
     pub html_signature: Option<String>,
 }
 
-impl UpdateIdentityCommand {
+impl JmapIdentityUpdateCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 

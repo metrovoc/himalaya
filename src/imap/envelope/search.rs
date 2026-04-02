@@ -46,7 +46,7 @@ use crate::imap::{
 ///   - smaller:5000      - messages smaller than 5000 bytes
 ///   - all               - all messages
 #[derive(Debug, Parser)]
-pub struct SearchEnvelopesCommand {
+pub struct ImapEnvelopeSearchCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -61,7 +61,7 @@ pub struct SearchEnvelopesCommand {
     pub seq: bool,
 }
 
-impl SearchEnvelopesCommand {
+impl ImapEnvelopeSearchCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

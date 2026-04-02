@@ -20,7 +20,7 @@ use crate::imap::{
 /// This command replaces all existing flags on messages identified by
 /// the given sequence set with the specified flags.
 #[derive(Debug, Parser)]
-pub struct SetFlagsCommand {
+pub struct ImapFlagSetCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -38,7 +38,7 @@ pub struct SetFlagsCommand {
     pub seq: bool,
 }
 
-impl SetFlagsCommand {
+impl ImapFlagSetCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

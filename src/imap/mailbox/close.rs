@@ -16,9 +16,9 @@ use crate::imap::account::ImapAccount;
 ///
 /// https://github.com/pimalaya/sirup
 #[derive(Debug, Parser)]
-pub struct CloseMailboxCommand;
+pub struct ImapMailboxCloseCommand;
 
-impl CloseMailboxCommand {
+impl ImapMailboxCloseCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
 

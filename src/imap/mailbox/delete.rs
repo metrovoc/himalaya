@@ -11,12 +11,12 @@ use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
 /// All emails from the given mailbox are definitely deleted. The
 /// mailbox is also deleted after execution of the command.
 #[derive(Debug, Parser)]
-pub struct DeleteMailboxCommand {
+pub struct ImapMailboxDeleteCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
 }
 
-impl DeleteMailboxCommand {
+impl ImapMailboxDeleteCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

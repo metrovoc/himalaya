@@ -19,13 +19,13 @@ use crate::jmap::account::JmapAccount;
 /// Lists sender identities available for sending email. Pass no IDs to
 /// list all identities.
 #[derive(Debug, Parser)]
-pub struct GetIdentityCommand {
+pub struct JmapIdentityGetCommand {
     /// Identity ID(s) to retrieve (omit to get all).
     #[arg(value_name = "ID")]
     pub ids: Option<Vec<String>>,
 }
 
-impl GetIdentityCommand {
+impl JmapIdentityGetCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 

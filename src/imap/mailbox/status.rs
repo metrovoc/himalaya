@@ -18,12 +18,12 @@ use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
 /// This command displays status information about a mailbox,
 /// including message counts and UID values.
 #[derive(Debug, Parser)]
-pub struct StatusMailboxCommand {
+pub struct ImapMailboxStatusCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
 }
 
-impl StatusMailboxCommand {
+impl ImapMailboxStatusCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

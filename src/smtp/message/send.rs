@@ -24,14 +24,14 @@ use crate::smtp::account::SmtpAccount;
 /// This command appends a message to the specified mailbox. The
 /// message is read from stdin in RFC 5322 format (raw email).
 #[derive(Debug, Parser)]
-pub struct SendMessageCommand {
+pub struct SmtpMessageSendCommand {
     /// The raw message, including headers and body.
     #[arg(trailing_var_arg = true)]
     #[arg(name = "message", value_name = "MESSAGE")]
     pub message: Vec<String>,
 }
 
-impl SendMessageCommand {
+impl SmtpMessageSendCommand {
     pub fn execute(self, printer: &mut impl Printer, account: SmtpAccount) -> Result<()> {
         let mut imap = account.new_smtp_session()?;
 

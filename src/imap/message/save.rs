@@ -19,7 +19,7 @@ use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
 /// This command appends a message to the specified mailbox. The
 /// message is read from stdin in RFC 5322 format (raw email).
 #[derive(Debug, Parser)]
-pub struct SaveMessageCommand {
+pub struct ImapMessageSaveCommand {
     #[command(flatten)]
     pub mailbox: MailboxNameArg,
 
@@ -33,7 +33,7 @@ pub struct SaveMessageCommand {
     pub message: Vec<String>,
 }
 
-impl SaveMessageCommand {
+impl ImapMessageSaveCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox: Mailbox<'static> = self.mailbox.inner.try_into()?;

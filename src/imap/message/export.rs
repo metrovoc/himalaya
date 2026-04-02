@@ -35,7 +35,7 @@ pub enum ExportType {
 /// - eml: Save as .eml file
 /// - parts: Export all MIME parts to separate files
 #[derive(Debug, Parser)]
-pub struct ExportMessageCommand {
+pub struct ImapMessageExportCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
 
@@ -60,7 +60,7 @@ pub struct ExportMessageCommand {
     pub open: bool,
 }
 
-impl ExportMessageCommand {
+impl ImapMessageExportCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

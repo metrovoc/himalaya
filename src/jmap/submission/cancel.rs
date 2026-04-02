@@ -13,13 +13,13 @@ use crate::jmap::account::JmapAccount;
 /// Only submissions with `undoStatus: "pending"` can be canceled.
 /// The server may reject this if the message has already been sent.
 #[derive(Debug, Parser)]
-pub struct CancelSubmissionCommand {
+pub struct JmapSubmissionCancelCommand {
     /// Submission ID(s) to cancel.
     #[arg(value_name = "ID", required = true)]
     pub ids: Vec<String>,
 }
 
-impl CancelSubmissionCommand {
+impl JmapSubmissionCancelCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 

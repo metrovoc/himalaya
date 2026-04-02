@@ -26,7 +26,7 @@ use crate::imap::{
 /// message, including all header fields like date, subject, from, to,
 /// cc, bcc, reply-to, message-id, and in-reply-to.
 #[derive(Debug, Parser)]
-pub struct GetEnvelopeCommand {
+pub struct ImapEnvelopeGetCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameOptionalFlag,
     #[command(flatten)]
@@ -40,7 +40,7 @@ pub struct GetEnvelopeCommand {
     pub seq: bool,
 }
 
-impl GetEnvelopeCommand {
+impl ImapEnvelopeGetCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

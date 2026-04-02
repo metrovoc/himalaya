@@ -24,13 +24,13 @@ use crate::imap::account::ImapAccount;
 ///
 /// [RFC 2971]: https://www.rfc-editor.org/rfc/rfc2971.html
 #[derive(Debug, Parser)]
-pub struct IdCommand {
+pub struct ImapIdCommand {
     #[arg(short, long, num_args = 1..)]
     #[arg(value_name = "KEY:VAL", value_parser = parameter_parser)]
     parameter: Option<Vec<(IString<'static>, NString<'static>)>>,
 }
 
-impl IdCommand {
+impl ImapIdCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mut params = HashMap::new();

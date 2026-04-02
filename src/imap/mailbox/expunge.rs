@@ -14,14 +14,14 @@ use crate::imap::{
 /// All envelopes with the \Deleted flag will be definitely removed
 /// from the given mailbox.
 #[derive(Debug, Parser)]
-pub struct ExpungeMailboxCommand {
+pub struct ImapMailboxExpungeCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
     #[command(flatten)]
     pub mailbox_no_select: MailboxNoSelectFlag,
 }
 
-impl ExpungeMailboxCommand {
+impl ImapMailboxExpungeCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

@@ -19,12 +19,12 @@ use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
 /// available in the given mailbox. These flags come from the SELECT
 /// response.
 #[derive(Debug, Parser)]
-pub struct ListFlagsCommand {
+pub struct ImapFlagListCommand {
     #[command(flatten)]
     pub mailbox_name: MailboxNameArg,
 }
 
-impl ListFlagsCommand {
+impl ImapFlagListCommand {
     pub fn execute(self, printer: &mut impl Printer, account: ImapAccount) -> Result<()> {
         let mut imap = account.new_imap_session()?;
         let mailbox = self.mailbox_name.inner.try_into()?;

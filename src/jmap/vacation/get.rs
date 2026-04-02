@@ -18,9 +18,9 @@ use crate::jmap::account::JmapAccount;
 
 /// Get the JMAP vacation response (VacationResponse/get).
 #[derive(Debug, Parser)]
-pub struct GetVacationCommand;
+pub struct JmapVacationGetCommand;
 
-impl GetVacationCommand {
+impl JmapVacationGetCommand {
     pub fn execute(self, printer: &mut impl Printer, account: JmapAccount) -> Result<()> {
         let mut jmap = account.new_jmap_session()?;
 
