@@ -3,14 +3,15 @@ use std::{collections::HashMap, fmt, num::NonZeroU32};
 use anyhow::{bail, Result};
 use clap::Parser;
 use io_imap::{
-    coroutines::{fetch::*, select::*, thread::*},
+    rfc3501::{fetch::*, select::*},
+    rfc5256::thread::*,
     types::{
         extensions::thread::{Thread, ThreadingAlgorithm},
         fetch::{MacroOrMessageDataItemNames, MessageDataItem, MessageDataItemName},
         sequence::SequenceSet,
     },
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use pimalaya_toolbox::{stream::imap::ImapSession, terminal::printer::Printer};
 use serde::{ser::SerializeStruct, Serialize, Serializer};
 
@@ -55,13 +56,15 @@ impl ImapEnvelopeThreadCommand {
 
         if !self.mailbox_no_select.inner {
             let mut arg = None;
-            let mut coroutine = ImapSelect::new(imap.context, mailbox);
+            let mut coroutine = ImapMailboxSelect::new(imap.context, mailbox);
 
             imap.context = loop {
                 match coroutine.resume(arg.take()) {
-                    ImapSelectResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                    ImapSelectResult::Ok { context, .. } => break context,
-                    ImapSelectResult::Err { err, .. } => bail!(err),
+                    ImapMailboxSelectResult::Io { input } => {
+                        arg = Some(handle(&mut imap.stream, input)?)
+                    }
+                    ImapMailboxSelectResult::Ok { context, .. } => break context,
+                    ImapMailboxSelectResult::Err { err, .. } => bail!(err),
                 }
             };
         }
@@ -70,18 +73,21 @@ impl ImapEnvelopeThreadCommand {
         let search_criteria = parse_query(&self.query)?;
 
         let mut arg = None;
-        let mut coroutine = ImapThread::new(imap.context, algorithm, search_criteria, !self.seq);
+        let mut coroutine =
+            ImapMessageThread::new(imap.context, algorithm, search_criteria, !self.seq);
 
         let threads = loop {
             match coroutine.resume(arg.take()) {
-                ImapThreadResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                ImapThreadResult::Ok {
+                ImapMessageThreadResult::Io { input } => {
+                    arg = Some(handle(&mut imap.stream, input)?)
+                }
+                ImapMessageThreadResult::Ok {
                     context, threads, ..
                 } => {
                     imap.context = context;
                     break threads;
                 }
-                ImapThreadResult::Err { err, .. } => bail!(err),
+                ImapMessageThreadResult::Err { err, .. } => bail!(err),
             }
         };
 
@@ -160,13 +166,13 @@ fn fetch_subjects(
     ]);
 
     let mut arg = None;
-    let mut coroutine = ImapFetch::new(imap.context, sequence_set, item_names, uid);
+    let mut coroutine = ImapMessageFetch::new(imap.context, sequence_set, item_names, uid);
 
     let data = loop {
         match coroutine.resume(arg.take()) {
-            ImapFetchResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-            ImapFetchResult::Ok { data, .. } => break data,
-            ImapFetchResult::Err { err, .. } => bail!(err),
+            ImapMessageFetchResult::Io { input } => arg = Some(handle(&mut imap.stream, input)?),
+            ImapMessageFetchResult::Ok { data, .. } => break data,
+            ImapMessageFetchResult::Err { err, .. } => bail!(err),
         }
     };
 

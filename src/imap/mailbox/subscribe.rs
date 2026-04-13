@@ -1,7 +1,7 @@
 use anyhow::{bail, Result};
 use clap::Parser;
-use io_imap::coroutines::subscribe::*;
-use io_stream::runtimes::std::handle;
+use io_imap::rfc3501::subscribe::*;
+use io_socket::runtimes::std_stream::handle;
 use pimalaya_toolbox::terminal::printer::{Message, Printer};
 
 use crate::imap::{account::ImapAccount, mailbox::arg::MailboxNameArg};
@@ -22,13 +22,15 @@ impl ImapMailboxSubscribeCommand {
         let mailbox = self.mailbox_name.inner.try_into()?;
 
         let mut arg = None;
-        let mut coroutine = ImapSubscribe::new(imap.context, mailbox);
+        let mut coroutine = ImapMailboxSubscribe::new(imap.context, mailbox);
 
         loop {
             match coroutine.resume(arg.take()) {
-                ImapSubscribeResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                ImapSubscribeResult::Ok { .. } => break,
-                ImapSubscribeResult::Err { err, .. } => bail!(err),
+                ImapMailboxSubscribeResult::Io { input } => {
+                    arg = Some(handle(&mut imap.stream, input)?)
+                }
+                ImapMailboxSubscribeResult::Ok { .. } => break,
+                ImapMailboxSubscribeResult::Err { err, .. } => bail!(err),
             }
         }
 

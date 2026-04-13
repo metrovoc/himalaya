@@ -11,9 +11,9 @@ use io_smtp::{
         domain::Domain, ehlo_domain::EhloDomain, forward_path::ForwardPath, local_part::LocalPart,
         mailbox::Mailbox, reverse_path::ReversePath,
     },
-    send_message::*,
+    send::*,
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use mail_parser::{Addr, Address, HeaderName, HeaderValue, MessageParser};
 use pimalaya_toolbox::terminal::printer::{Message, Printer};
 
@@ -52,13 +52,13 @@ impl SmtpMessageSendCommand {
         let (reverse_path, forward_paths) = into_smtp_msg(message.as_bytes())?;
 
         let mut arg = None;
-        let mut coroutine = SendSmtpMessage::new(reverse_path, forward_paths, message.into_bytes());
+        let mut coroutine = SmtpMessageSend::new(reverse_path, forward_paths, message.into_bytes());
 
         loop {
             match coroutine.resume(arg.take()) {
-                SendSmtpMessageResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                SendSmtpMessageResult::Ok => break,
-                SendSmtpMessageResult::Err { err } => bail!(err),
+                SmtpMessageSendResult::Io { input } => arg = Some(handle(&mut imap.stream, input)?),
+                SmtpMessageSendResult::Ok => break,
+                SmtpMessageSendResult::Err { err } => bail!(err),
             }
         }
 

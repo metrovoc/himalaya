@@ -7,7 +7,7 @@ use io_jmap::{
     rfc8621::coroutines::identity_get::{JmapIdentityGet, JmapIdentityGetResult},
     rfc8621::types::identity::Identity,
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use log::warn;
 use pimalaya_toolbox::terminal::printer::Printer;
 use serde::Serialize;

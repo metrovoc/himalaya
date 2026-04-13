@@ -4,10 +4,10 @@ use anyhow::{bail, Result};
 use clap::Parser;
 use comfy_table::{Cell, Row, Table};
 use io_imap::{
-    coroutines::{list::*, lsub::*},
+    rfc3501::{list::*, lsub::*},
     types::{core::QuotedChar, flag::FlagNameAttribute, mailbox::Mailbox},
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use pimalaya_toolbox::terminal::printer::Printer;
 use serde::Serialize;
 
@@ -41,24 +41,28 @@ impl ImapMailboxListCommand {
 
         let mailboxes = if self.all {
             let mut arg = None;
-            let mut coroutine = ImapList::new(imap.context, reference, pattern);
+            let mut coroutine = ImapMailboxList::new(imap.context, reference, pattern);
 
             loop {
                 match coroutine.resume(arg.take()) {
-                    ImapListResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                    ImapListResult::Ok { mailboxes, .. } => break mailboxes,
-                    ImapListResult::Err { err, .. } => bail!(err),
+                    ImapMailboxListResult::Io { input } => {
+                        arg = Some(handle(&mut imap.stream, input)?)
+                    }
+                    ImapMailboxListResult::Ok { mailboxes, .. } => break mailboxes,
+                    ImapMailboxListResult::Err { err, .. } => bail!(err),
                 }
             }
         } else {
             let mut arg = None;
-            let mut coroutine = ImapLsub::new(imap.context, reference, pattern);
+            let mut coroutine = ImapMailboxLsub::new(imap.context, reference, pattern);
 
             loop {
                 match coroutine.resume(arg.take()) {
-                    ImapLsubResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                    ImapLsubResult::Ok { mailboxes, .. } => break mailboxes,
-                    ImapLsubResult::Err { err, .. } => bail!(err),
+                    ImapMailboxLsubResult::Io { input } => {
+                        arg = Some(handle(&mut imap.stream, input)?)
+                    }
+                    ImapMailboxLsubResult::Ok { mailboxes, .. } => break mailboxes,
+                    ImapMailboxLsubResult::Err { err, .. } => bail!(err),
                 }
             }
         };

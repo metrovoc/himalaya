@@ -4,13 +4,14 @@ use anyhow::{bail, Result};
 use clap::Parser;
 use comfy_table::{presets, Cell, ContentArrangement, Row, Table};
 use io_imap::{
-    coroutines::{select::*, sort::*},
+    rfc3501::select::*,
+    rfc5256::sort::*,
     types::{
         core::Vec1,
         extensions::sort::{SortCriterion, SortKey},
     },
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use pimalaya_toolbox::terminal::printer::Printer;
 use serde::Serialize;
 
@@ -61,13 +62,15 @@ impl ImapEnvelopeSortCommand {
 
         // SELECT mailbox
         let mut arg = None;
-        let mut coroutine = ImapSelect::new(imap.context, mailbox);
+        let mut coroutine = ImapMailboxSelect::new(imap.context, mailbox);
 
         let context = loop {
             match coroutine.resume(arg.take()) {
-                ImapSelectResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                ImapSelectResult::Ok { context, .. } => break context,
-                ImapSelectResult::Err { err, .. } => bail!(err),
+                ImapMailboxSelectResult::Io { input } => {
+                    arg = Some(handle(&mut imap.stream, input)?)
+                }
+                ImapMailboxSelectResult::Ok { context, .. } => break context,
+                ImapMailboxSelectResult::Err { err, .. } => bail!(err),
             }
         };
 
@@ -83,13 +86,14 @@ impl ImapEnvelopeSortCommand {
 
         // SORT
         let mut arg = None;
-        let mut coroutine = ImapSort::new(context, sort_criteria, search_criteria, !self.seq);
+        let mut coroutine =
+            ImapMailboxSort::new(context, sort_criteria, search_criteria, !self.seq);
 
         let ids = loop {
             match coroutine.resume(arg.take()) {
-                ImapSortResult::Io { io } => arg = Some(handle(&mut imap.stream, io)?),
-                ImapSortResult::Ok { ids, .. } => break ids,
-                ImapSortResult::Err { err, .. } => bail!(err),
+                ImapMailboxSortResult::Io { input } => arg = Some(handle(&mut imap.stream, input)?),
+                ImapMailboxSortResult::Ok { ids, .. } => break ids,
+                ImapMailboxSortResult::Err { err, .. } => bail!(err),
             }
         };
 

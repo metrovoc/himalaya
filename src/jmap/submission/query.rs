@@ -9,7 +9,7 @@ use io_jmap::{
     },
     rfc8621::types::email_submission::{EmailSubmission, EmailSubmissionFilter, UndoStatus},
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use pimalaya_toolbox::terminal::printer::Printer;
 use serde::Serialize;
 

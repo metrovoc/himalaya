@@ -4,7 +4,7 @@ use io_jmap::{
     rfc8621::coroutines::email_get::{JmapEmailGet, JmapEmailGetResult},
     rfc8621::types::email::EmailAddress,
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use log::warn;
 use pimalaya_toolbox::terminal::printer::{Message, Printer};
 

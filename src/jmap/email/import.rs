@@ -15,7 +15,7 @@ use io_jmap::{
         types::email::EmailImport,
     },
 };
-use io_stream::runtimes::std::handle;
+use io_socket::runtimes::std_stream::handle;
 use pimalaya_toolbox::terminal::printer::{Message, Printer};
 use url::Url;
 
