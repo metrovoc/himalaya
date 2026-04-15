@@ -635,6 +635,7 @@ version = "1.2.0"
 dependencies = [
  "anyhow",
  "assert_cmd",
+ "base64",
  "chrono",
  "clap",
  "comfy-table",
@@ -642,6 +643,7 @@ dependencies = [
  "dirs",
  "gethostname",
  "io-fs",
+ "io-gmail",
  "io-imap",
  "io-jmap",
  "io-maildir",
@@ -651,9 +653,11 @@ dependencies = [
  "log",
  "mail-parser",
  "mime_guess",
+ "native-tls",
  "open",
  "pimalaya-toolbox",
  "rfc2047-decoder",
+ "rustls",
  "secrecy",
  "serde",
  "serde_json",
@@ -825,6 +829,21 @@ source = "git+https://github.com/pimalaya/io-fs#96cfd6cf4c058dec430a993b893ecaa6
 dependencies = [
  "log",
  "thiserror",
+]
+
+[[package]]
+name = "io-gmail"
+version = "0.0.1"
+dependencies = [
+ "base64",
+ "io-http",
+ "io-socket",
+ "log",
+ "secrecy",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "url",
 ]
 
 [[package]]

@@ -1,6 +1,8 @@
 mod account;
 mod cli;
 mod config;
+#[cfg(feature = "gmail")]
+mod gmail;
 #[cfg(feature = "imap")]
 mod imap;
 #[cfg(feature = "jmap")]

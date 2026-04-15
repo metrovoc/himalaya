@@ -15,6 +15,8 @@ use pimalaya_toolbox::{
     },
 };
 
+#[cfg(feature = "gmail")]
+use crate::gmail::command::GmailCommand;
 #[cfg(feature = "imap")]
 use crate::imap::command::ImapCommand;
 #[cfg(feature = "jmap")]
@@ -63,6 +65,9 @@ pub enum BackendCommand {
     #[cfg(feature = "imap")]
     #[command(subcommand)]
     Imap(ImapCommand),
+    #[cfg(feature = "gmail")]
+    #[command(subcommand)]
+    Gmail(GmailCommand),
     #[cfg(feature = "jmap")]
     #[command(subcommand)]
     Jmap(JmapCommand),
@@ -95,6 +100,19 @@ impl BackendCommand {
                 };
 
                 let account = Account::new(config, account_config, imap_config)?;
+
+                cmd.execute(printer, account)
+            }
+            #[cfg(feature = "gmail")]
+            Self::Gmail(cmd) => {
+                let config = Config::from_paths_or_default(config_paths)?;
+                let (account_name, mut account_config) = config.get_account(account_name)?;
+
+                let Some(gmail_config) = account_config.gmail.take() else {
+                    bail!("Gmail config is missing for account `{account_name}`")
+                };
+
+                let account = Account::new(config, account_config, gmail_config)?;
 
                 cmd.execute(printer, account)
             }

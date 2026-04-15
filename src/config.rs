@@ -56,6 +56,8 @@ pub struct AccountConfig {
 
     #[allow(unused)]
     pub imap: Option<ImapConfig>,
+    pub gmail: Option<GmailConfig>,
+    #[allow(unused)]
     pub jmap: Option<JmapConfig>,
     #[allow(unused)]
     pub maildir: Option<MaildirConfig>,
@@ -253,6 +255,7 @@ impl TryFrom<SaslConfig> for Sasl {
 }
 
 /// JMAP configuration.
+#[allow(unused)]
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "kebab-case", deny_unknown_fields)]
 pub struct JmapConfig {
@@ -275,6 +278,7 @@ pub struct JmapConfig {
 
 /// JMAP authentication configuration.
 // https://www.iana.org/assignments/http-authschemes/http-authschemes.xhtml#authschemes
+#[allow(unused)]
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "kebab-case", deny_unknown_fields)]
 pub enum JmapAuthConfig {
@@ -305,4 +309,24 @@ impl TryFrom<JmapAuthConfig> for pimalaya_toolbox::stream::jmap::JmapAuth {
             }),
         }
     }
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "kebab-case", deny_unknown_fields)]
+pub struct GmailConfig {
+    #[serde(default = "default_gmail_user_id")]
+    pub user_id: String,
+    #[serde(default)]
+    pub tls: TlsConfig,
+    pub auth: GmailAuthConfig,
+}
+
+fn default_gmail_user_id() -> String {
+    "me".to_string()
+}
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename_all = "kebab-case", deny_unknown_fields)]
+pub enum GmailAuthConfig {
+    Bearer { token: Secret },
 }

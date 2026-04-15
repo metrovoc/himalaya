@@ -106,3 +106,26 @@ smtp.sasl.plain.passwd.command = ["mimosa", "password", "read", "example"]
 smtp.sasl.login.username = "username"
 smtp.sasl.login.password.command = ["mimosa", "password", "read", "example"]
 #smtp.sasl.login.password.raw = "***"
+
+# --------------------------------
+# Gmail config
+# --------------------------------
+
+# Gmail user ID. `me` is the normal value for OAuth bearer tokens.
+gmail.user-id = "me"
+
+# Gmail always uses TLS on gmail.googleapis.com:443.
+gmail.tls.provider = "rustls"
+#gmail.tls.provider = "native-tls"
+
+# Gmail crypto provider for rustls.
+gmail.tls.rustls.crypto = "ring"
+#gmail.tls.rustls.crypto = "aws"
+
+# Custom Gmail TLS certificate.
+#gmail.tls.cert = "/path/to/custom/cert.pem"
+
+# Gmail bearer token source.
+gmail.auth.bearer.token.command = ["ortie", "access-token", "read", "gmail"]
+#gmail.auth.bearer.token.env = "GMAIL_ACCESS_TOKEN"
+#gmail.auth.bearer.token.raw = "***"
