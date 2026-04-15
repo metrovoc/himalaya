@@ -11,13 +11,11 @@ use tempfile::NamedTempFile;
 #[ignore = "requires a running Stalwart instance and --ignored"]
 fn stalwart_imap() {
     let mut config = NamedTempFile::new().unwrap();
-    let config_tpl = format!(
-        r#"[accounts.stalwart]
+    let config_tpl = r#"[accounts.stalwart]
 default = true
 imap.url = "imap://localhost"
 imap.sasl.plain.authcid = "test"
-imap.sasl.plain.passwd.raw = "test""#
-    );
+imap.sasl.plain.passwd.raw = "test""#;
 
     config.write_all(config_tpl.as_bytes()).unwrap();
 
