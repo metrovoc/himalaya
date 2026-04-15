@@ -51,7 +51,7 @@ io-process = { version = "0.0.2", default-features = false }
 io-smtp = { version = "0.0.1", default-features = false, optional = true }
 io-socket = { version = "0.0.1", default-features = false, features = ["std-stream"] }
 log = "0.4"
-mail-parser = { version = "0.11", features = ["serde"], optional = true }
+mail-parser = { version = "0.11", features = ["serde", "full_encoding"], optional = true }
 mime_guess = { version = "2", optional = true }
 native-tls = { version = "0.2", optional = true }
 open = "5"
