@@ -15,7 +15,7 @@ pub enum GmailLabelCommand {
     List(GmailLabelListCommand),
     #[command(visible_aliases = ["add", "new"])]
     Create(GmailLabelCreateCommand),
-    #[command(visible_aliases = ["del", "delete", "remove", "rm"])]
+    #[command(visible_aliases = ["del", "remove", "rm"])]
     Delete(GmailLabelDeleteCommand),
 }
 
