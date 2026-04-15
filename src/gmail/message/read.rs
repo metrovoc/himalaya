@@ -77,16 +77,19 @@ struct MessagePlainView<'a> {
 
 impl fmt::Display for MessagePlainView<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for (index, part) in self.message.text_bodies().enumerate() {
-            if index > 0 {
+        // `body_text` falls back to html_to_text when only an HTML part exists,
+        // so HTML-only mail is rendered as readable plain text instead of raw markup.
+        let mut first = true;
+        let mut pos = 0;
+        while let Some(contents) = self.message.body_text(pos) {
+            if !first {
                 writeln!(f)?;
                 writeln!(f)?;
             }
-            if let Some(contents) = part.text_contents() {
-                write!(f, "{}", contents.trim_end())?;
-            }
+            write!(f, "{}", contents.trim_end())?;
+            first = false;
+            pos += 1;
         }
-
         Ok(())
     }
 }
@@ -97,16 +100,19 @@ struct MessageHtmlView<'a> {
 
 impl fmt::Display for MessageHtmlView<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for (index, part) in self.message.html_bodies().enumerate() {
-            if index > 0 {
+        // `body_html` wraps text-only parts in minimal HTML so `--html`
+        // always yields real HTML markup.
+        let mut first = true;
+        let mut pos = 0;
+        while let Some(contents) = self.message.body_html(pos) {
+            if !first {
                 writeln!(f)?;
                 writeln!(f)?;
             }
-            if let Some(contents) = part.text_contents() {
-                write!(f, "{}", contents.trim_end())?;
-            }
+            write!(f, "{}", contents.trim_end())?;
+            first = false;
+            pos += 1;
         }
-
         Ok(())
     }
 }
